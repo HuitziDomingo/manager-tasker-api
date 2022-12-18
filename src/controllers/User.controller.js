@@ -32,7 +32,7 @@ export const auth = async (req, res) => {
     let user = await User.findOne({ email })
     if (!user) {
         let error = new Error(`El usuario no existe`)
-        return res.status(400).json({ message: error.message })
+        return res.status(404).json({ message: error.message })
     }
 
     // Comprobar si el usuario esta confirmado
@@ -54,4 +54,40 @@ export const auth = async (req, res) => {
         return res.status(403).json({ message: error.message })
     }
 
+}
+
+export const confirmToken = async (req, res) => {
+    let { token } = req.params
+    let userConfirm = await User.findOne({ token })//Obteniendo usuario a atraves del token
+    if (!userConfirm){
+        let error = new Error('Token no valido')
+        return res.status(403).json({ message: error.message })
+    }
+    try {
+        userConfirm.confirm = true
+        userConfirm.token = ''
+        await userConfirm.save()
+        res.json({ message: 'Usario confirmado correctamente'})
+        // console.log(userConfirm)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const forgetPassword = async (req, res) => {
+    let {email} = req.body
+    //Comprobae si usuario existe (funcion existente)
+    let user = await User.findOne({ email })
+    if (!user) {
+        let error = new Error(`El usuario no existe`)
+        return res.status(404).json({ message: error.message })
+    }
+    //Si el usuario existe
+    try {
+        user.token = generateId()
+        await user.save()
+        res.json({ message: 'Hemos enviado mail con las instrucciones'})
+    } catch (error) {
+        
+    }
 }
