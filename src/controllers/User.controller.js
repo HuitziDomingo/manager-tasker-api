@@ -59,7 +59,7 @@ export const auth = async (req, res) => {
 export const confirmToken = async (req, res) => {
     let { token } = req.params
     let userConfirm = await User.findOne({ token })//Obteniendo usuario a atraves del token
-    if (!userConfirm){
+    if (!userConfirm) {
         let error = new Error('Token no valido')
         return res.status(403).json({ message: error.message })
     }
@@ -67,7 +67,7 @@ export const confirmToken = async (req, res) => {
         userConfirm.confirm = true
         userConfirm.token = ''
         await userConfirm.save()
-        res.json({ message: 'Usario confirmado correctamente'})
+        res.json({ message: 'Usario confirmado correctamente' })
         // console.log(userConfirm)
     } catch (error) {
         console.log(error)
@@ -75,8 +75,8 @@ export const confirmToken = async (req, res) => {
 }
 
 export const forgetPassword = async (req, res) => {
-    let {email} = req.body
-    //Comprobae si usuario existe (funcion existente)
+    let { email } = req.body
+    //Comprobar si usuario existe (funcion existente)
     let user = await User.findOne({ email })
     if (!user) {
         let error = new Error(`El usuario no existe`)
@@ -86,8 +86,46 @@ export const forgetPassword = async (req, res) => {
     try {
         user.token = generateId()
         await user.save()
-        res.json({ message: 'Hemos enviado mail con las instrucciones'})
+        res.json({ message: 'Hemos enviado mail con las instrucciones' })
     } catch (error) {
-        
+        console.log(error)
     }
+}
+
+export const proveToken = async (req, res) => {
+    let { token } = req.params
+    console.log(token)
+    //Buscar el token del usuario
+    let validatedToken = await User.findOne({ token })
+    if (validatedToken)
+        res.json({ message: 'Token Valido y el usuario existe' })
+    else {
+        let error = new Error('Token no Valido')
+        return res.status(404).json({ message: error.message })
+    }
+}
+
+export const newPassword = async (req, res) => {
+    let { token } = req.params
+    let { password } = req.body
+
+    let user = await User.findOne({ token })
+    if (user) {
+        user.password = password
+        user.token = ''
+        try {
+            await user.save()
+            res.json({ message: 'password modificado correctamente' })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    else {
+        let error = new Error('Token no Valido')
+        return res.status(404).json({ message: error.message })
+    }
+}
+
+export const profile = async (req, res) => {
+    console.log('desde perfil')
 }

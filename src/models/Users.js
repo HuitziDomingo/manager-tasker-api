@@ -34,7 +34,7 @@ userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) 
         next()
     let salt = await bcrypt.genSalt(10)
-    this.password = await bcrypt.hash(this.password, salt)
+    this.password =  bcrypt.hash(this.password, salt)
 })
 
 userSchema.methods.validatePassword = async function (password) {
