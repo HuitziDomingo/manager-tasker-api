@@ -127,5 +127,6 @@ export const newPassword = async (req, res) => {
 }
 
 export const profile = async (req, res) => {
-    console.log('desde perfil')
+    let { user } = req.body
+    res.json(user)
 }

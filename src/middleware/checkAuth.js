@@ -1,4 +1,30 @@
-export const checkAuth =  (req, res, next) => {
-    console.log('desde checkAuth')
+import jwt from 'jsonwebtoken'
+import User from '../models/Users'
+
+export const checkAuth = async (req, res, next) => {
+    let token
+
+    if (
+        req.headers.authorization &&
+        req.headers.authorization.startsWith('Bearer')
+    ) {
+        try {
+            token = req.headers.authorization.split(' ')[1]
+            let decoded = jwt.verify(token, process.env.JWT)
+            req.user = await User.findById(decoded.id).select(
+                '-password -confirm -token -createdAt -updatedAt -__v'
+            )
+            return next()
+            // console.log(req.user)
+        } catch (error) {
+            return res.status(404).json({ message: 'Huboe error: ' + error.message })
+        }
+    }
+
+    if (!token) {
+        let error = new Error('Token no valido')
+        return res.status(401).json({ message: error.message })
+    }
+
     next()
 }
