@@ -18,8 +18,8 @@ export const createUser = async (req, res) => {
     try {
         let user = new User(req.body)
         user.token = generateId()
-        let savedUser = await user.save()
-        return res.send(savedUser)
+        await user.save()
+        return res.json({message: 'Usuario creado correctamente, Revisa tu email para confirmar tu cuenta'})
     } catch (error) {
         console.log(`Error en el usuario: ${error}`)
     }
