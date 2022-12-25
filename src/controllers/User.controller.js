@@ -1,6 +1,7 @@
 import User from '../models/Users'
 import { generateId } from '../helpers/generetId'
 import { generateJWT } from '../helpers/generateJWT'
+import { emailRegister } from '../helpers/emails'
 
 export const getUsers = (req, res) => {
     res.json({ message: 'obtener usuarios' })
@@ -19,7 +20,19 @@ export const createUser = async (req, res) => {
         let user = new User(req.body)
         user.token = generateId()
         await user.save()
-        return res.json({message: 'Usuario creado correctamente, Revisa tu email para confirmar tu cuenta'})
+
+        //Enviar email de conformacion
+        console.log(user)
+        emailRegister({
+            email: user.email,
+            name: user.name,
+            token: user.token
+        })
+
+        return res.json({
+            message:
+                'Usuario creado correctamente, Revisa tu email para confirmar tu cuenta'
+        })
     } catch (error) {
         console.log(`Error en el usuario: ${error}`)
     }
