@@ -1,7 +1,7 @@
 import User from '../models/Users'
 import { generateId } from '../helpers/generetId'
 import { generateJWT } from '../helpers/generateJWT'
-import { emailRegister } from '../helpers/emails'
+import { emailRegister, emailForgetPassWord } from '../helpers/emails'
 
 export const getUsers = (req, res) => {
     res.json({ message: 'obtener usuarios' })
@@ -22,7 +22,7 @@ export const createUser = async (req, res) => {
         await user.save()
 
         //Enviar email de conformacion
-        console.log(user)
+        // console.log(user)
         emailRegister({
             email: user.email,
             name: user.name,
@@ -81,7 +81,6 @@ export const confirmToken = async (req, res) => {
         userConfirm.token = ''
         await userConfirm.save()
         res.json({ message: 'Usario confirmado correctamente' })
-        // console.log(userConfirm)
     } catch (error) {
         console.log(error)
     }
@@ -99,6 +98,12 @@ export const forgetPassword = async (req, res) => {
     try {
         user.token = generateId()
         await user.save()
+        //Enviar email de nuvo password
+        emailForgetPassWord({
+            email: user.email,
+            name: user.name,
+            token: user.token
+        })
         res.json({ message: 'Hemos enviado mail con las instrucciones' })
     } catch (error) {
         console.log(error)
