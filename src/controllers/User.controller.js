@@ -112,7 +112,7 @@ export const forgetPassword = async (req, res) => {
 
 export const proveToken = async (req, res) => {
     let { token } = req.params
-    console.log(token)
+    
     //Buscar el token del usuario
     let validatedToken = await User.findOne({ token })
     if (validatedToken)
