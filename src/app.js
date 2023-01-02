@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import helmet from 'helmet'
 
 import users from './routes/users.routes'
+import proyects from './routes/proyects.routes'
 
 
 const app = express()
@@ -29,5 +30,6 @@ app.get('/', (req, res) => {
 
 
 app.use('/api/users', users)
+app.use('/api', proyects)
 
 export default app
