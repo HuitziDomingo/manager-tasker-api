@@ -30,6 +30,6 @@ app.get('/', (req, res) => {
 
 
 app.use('/api/users', users)
-app.use('/api', proyects)
+app.use('/api/proyects', proyects)
 
 export default app

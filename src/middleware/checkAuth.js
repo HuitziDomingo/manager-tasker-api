@@ -15,9 +15,9 @@ export const checkAuth = async (req, res, next) => {
                 '-password -confirm -token -createdAt -updatedAt -__v'
             )
             return next()
-            // console.log(req.user)
+            
         } catch (error) {
-            return res.status(404).json({ message: 'Huboe error: ' + error.message })
+            return res.status(404).json({ message: 'Hubo error: ' + error.message })
         }
     }
 

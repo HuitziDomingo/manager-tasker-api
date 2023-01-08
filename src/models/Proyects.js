@@ -6,7 +6,7 @@ const proyectSchema = mongoose.Schema({
         trim: true,
         required: true
     },
-    descripton: {
+    description: {
         type: String,
         trim: true,
         required: true
@@ -29,7 +29,7 @@ const proyectSchema = mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"
         }
-    ],
+    ]
 
 },{ timestamps: true})
 
